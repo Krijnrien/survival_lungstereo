@@ -3,6 +3,12 @@ data
 /data
 ./data
 
+output
+/output
+./output
+
+
+
 ### R ###
 # History files
 .Rhistory

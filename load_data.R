@@ -8,6 +8,6 @@ source("prepare/prepare_dicom.r")
 
 # Inner join castor and RTH by patientID (anoniem.nummer)
 castor_rth <- inner_join(castor, rth, by = "Anoniem.nummer")
-# Inner join combined Castor & RTH with dicom data by patientID (anoniem.nummer)
-data <- inner_join(castor_rth, dicom, by = "Anoniem.nummer")
+# Left join combined Castor & RTH with dicom data by patientID (anoniem.nummer)
+data <- left_join(castor_rth, dicom, by = "Anoniem.nummer")
 rm(castor_rth, dicom) # Ojbects no longer required. Removing.
