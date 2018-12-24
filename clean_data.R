@@ -1,5 +1,7 @@
 library(dplyr)
 
+source("load_data.r")
+
 # 1 = upper lobe, 2 = lower lobe, 3 is middle lobe
 data["location_stat"] <- NA
 

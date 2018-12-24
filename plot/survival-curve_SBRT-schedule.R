@@ -6,10 +6,7 @@ cat("\014") # clear console
 rm(list=ls()) # clear memory
 graphics.off() # clear plots
 
-if(!exists("data")){
-  cat("No data object found in memory: running prepare.r script!\n")
-  source("clean.r")
-}
+source("clean_data.r")
 
 data <- data[which(data$Schedule != 4),]
 #data_surv <- Surv(time = data$diff_in_days, event = data$survivalstat)
@@ -30,22 +27,23 @@ data_730$survivalstat <- ifelse(data_730$diff_in_days > 730, 0, data_730$surviva
 data_730$diff_in_days <- ifelse(data_730$diff_in_days > 730, 730, data_730$diff_in_days)
 
 
-sdf <- survdiff(Surv(data_730$diff_in_days, data_730$survivalstat) ~ Schedule,data = data_730)
+sdf <- survdiff(Surv(data_730$diff_in_days, data_730$survivalstat) ~ Schedule, data = data_730)
 p.val <- 1 - pchisq(sdf$chisq, length(sdf$n) - 1)
 pvalue_730 <- format(round(p.val, 2), nsmall = 2)
 
+data2 <- data
 
-wilcoxon <- survdiff(Surv(data$diff_in_days, data$survivalstat) ~ Schedule,data = data, rho=1)
+wilcoxon <- survdiff(Surv(data$diff_in_days, data$survivalstat) ~ Schedule, data = data2, rho=1)
 p.val <- 1 - pchisq(wilcoxon$chisq, length(wilcoxon$n) - 1)
 pvalue_wilcoxon <- format(round(p.val, 2), nsmall = 2)
 
 
-fit <- survfit(Surv(data$diff_in_days, data$survivalstat) ~ Schedule, data = data)
+fit <- survfit(Surv(data$diff_in_days, data$survivalstat) ~ Schedule, data = data2)
 
 
 ggsurv <- ggsurvplot(
   fit, 
-  data = data,
+  data = data2,
   
   pval = TRUE,
   pval.size = 4,
