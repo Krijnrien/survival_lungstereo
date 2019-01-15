@@ -2,16 +2,17 @@ library(survival)
 library(survminer)
 library(dplyr)
 
-## REMOVE LATER, TEMPORARY
-cat("\014") #clear console
-rm(list=ls()) #clear memory
-## REMOVE ABOVE
+cat("\014") # clear console
+rm(list=ls()) # clear memory
+graphics.off() # clear plots
 
 source("clean_data.r")
 
-data <- data[which(data$cN == 0 | data$cN == 1 | data$cN == 2 | data$cN == 3),]
+data$sex <- factor(data$sex, levels = c("1", "2"), labels = c("male", "female"))
 
-fit <- survfit(Surv(data$diff_in_days, data$survivalstat) ~ cN, data = data)
+
+fit <- survfit(Surv(data$diff_in_days, data$survivalstat) ~ sex, data = data)
+
 
 ggsurv <- ggsurvplot(
   fit, 
@@ -23,20 +24,16 @@ ggsurv <- ggsurvplot(
   pval.method.size = 3,
   log.rank.weights = "1",
   
-  #conf.int = TRUE,
-  #conf.int.style = "ribbon",
+  conf.int = TRUE,
+  conf.int.style = "ribbon",
+  conf.int.alpha = 0.2,
   
   surv.median.line = "hv",
   surv.plot.height = 2,
   
   xlab = "Time in days",
   #xscale = 365.25,
-  
-  legend.title = "tnm",
-  legend.labs = c("n0","n1", "n2", "n3"),
-  
   surv.scale = "default",
-  #censor.shape = "|",
   
   risk.table = TRUE,
   tables.height = 0.2,
@@ -47,9 +44,9 @@ ggsurv <- ggsurvplot(
   cumevents = TRUE,
   cumevents.height = 0.2,
   
+  #palette = c("#6E6E6E", "#666666", "#000000"),
+  #palette = c("grey"),
   tables.theme = theme_cleantable(),
   ggtheme = theme_bw()
 )
-
 print(ggsurv)
-

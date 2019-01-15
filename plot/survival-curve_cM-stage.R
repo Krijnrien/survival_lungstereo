@@ -7,18 +7,15 @@ cat("\014") #clear console
 rm(list=ls()) #clear memory
 ## REMOVE ABOVE
 
-if(!exists("comb")){
-  cat("No comb objecM found in memory: running prepare.r script!\n")
-  source("clean.r")
-}
+source("clean_data.r")
 
-comb <- comb[which(comb$cM == 0 | comb$cM == 1),]
+data <- data[which(data$cM == 0 | data$cM == 1),]
 
-fit <- survfit(Surv(comb$diff_in_days, comb$survivalstat) ~ cM, data = comb)
+fit <- survfit(Surv(data$diff_in_days, data$survivalstat) ~ cM, data = data)
 
 ggsurv <- ggsurvplot(
   fit, 
-  comba = comb,
+  data = data,
   
   pval = TRUE,
   pval.size = 4,
